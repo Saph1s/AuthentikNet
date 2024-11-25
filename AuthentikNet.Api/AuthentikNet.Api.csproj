@@ -16,4 +16,8 @@
         <RepositoryUrl>https://github.com/Saph1s/AuthentikNet</RepositoryUrl>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
 </Project>
