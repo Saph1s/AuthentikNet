@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Version>0.0.1-dev</Version>
+        <Authors>Saph1s</Authors>
+        <Description>Authentik api client</Description>
+        <Copyright>Copyright (c) Saph1s 2024</Copyright>
+        <PackageProjectUrl>https://github.com/Saph1s/AuthentikNet</PackageProjectUrl>
+        <Company>Saph1s</Company>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/Saph1s/AuthentikNet</RepositoryUrl>
+    </PropertyGroup>
+
+</Project>
