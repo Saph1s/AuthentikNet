@@ -64,18 +64,21 @@ public class AdminApi
     }
 
     public async Task<List<VersionHistory>> AdminVersionHistoryList(
-        string? build,
-        string? ordering,
-        string? search,
-        string? version,
+        string? build = null,
+        string? ordering = null,
+        string? search = null,
+        string? version = null,
         CancellationToken cancellationToken = default)
     {
         var url = "/admin/version/history/";
-        var queryParameters = new Dictionary<string, string>();
-        if (build != null) queryParameters.Add("build", build);
-        if (ordering != null) queryParameters.Add("ordering", ordering);
-        if (search != null) queryParameters.Add("search", search);
-        if (version != null) queryParameters.Add("version", version);
+        var queryParameters = new Dictionary<string, string?>
+            {
+                { "build", build },
+                { "ordering", ordering },
+                { "search", search },
+                { "version", version }
+            }.Where(kv => kv.Value != null)
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
 
         if (queryParameters.Count > 0)
         {

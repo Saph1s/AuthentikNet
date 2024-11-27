@@ -12,22 +12,22 @@ public class CoreApi
     }
 
     public async Task<PaginatedUserList> CoreUsersList(
-        string? attributes,
-        string? email,
-        string[]? groupsByName,
-        string[]? groupsByPk,
-        bool? isActive,
-        bool? isSuperuser,
-        string? name,
-        string? ordering,
-        int? page,
-        int? pageSize,
-        string? path,
-        string? pathStartswith,
-        string? search,
-        string[]? type_,
-        string? username,
-        Guid? uuid,
+        string? attributes = null,
+        string? email = null,
+        string[]? groupsByName = null,
+        string[]? groupsByPk = null,
+        bool? isActive = null,
+        bool? isSuperuser = null,
+        string? name = null,
+        string? ordering = null,
+        int? page = null,
+        int? pageSize = null,
+        string? path = null,
+        string? pathStartswith = null,
+        string? search = null,
+        string[]? type_ = null,
+        string? username = null,
+        Guid? uuid = null,
         bool includeGroups = true, CancellationToken cancellationToken = default)
 
     {

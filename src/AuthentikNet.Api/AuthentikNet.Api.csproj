@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.1-dev.2</Version>
+        <Version>0.0.1-dev.16</Version>
         <Authors>Saph1s</Authors>
         <Description>Authentik api client</Description>
         <Copyright>Copyright (c) Saph1s 2024</Copyright>

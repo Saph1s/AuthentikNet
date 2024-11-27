@@ -1,12 +1,13 @@
 ﻿using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using AuthentikNet.Api.Utils;
 
 namespace AuthentikNet.Api.Models;
 
 /// <summary>
 /// The type of account
 /// </summary>
-[JsonConverter(typeof(JsonStringEnumConverter))]
+[JsonConverter(typeof(UserTypeEnumConverter))]
 public enum UserTypeEnum
 {
     /// <summary>

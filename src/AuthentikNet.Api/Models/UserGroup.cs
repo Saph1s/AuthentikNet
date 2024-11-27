@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using AuthentikNet.Api.Utils;
 
 namespace AuthentikNet.Api.Models;
 
@@ -10,5 +11,8 @@ public class UserGroup
     [JsonPropertyName("is_superuser")] public bool IsSuperUser { get; set; }
     [JsonPropertyName("parent")] public Guid? Parent { get; init; }
     [JsonPropertyName("parent_name")] public required string? ParentName { get; init; }
-    [JsonPropertyName("attributes")] public Dictionary<string, string> Attributes { get; set; } = new();
+
+    [JsonPropertyName("attributes")]
+    [JsonConverter(typeof(DynamicAttributesJsonConverter))]
+    public object Attributes { get; set; } = new();
 }

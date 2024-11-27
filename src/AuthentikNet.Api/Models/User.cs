@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using AuthentikNet.Api.Utils;
 
 namespace AuthentikNet.Api.Models;
 
@@ -14,9 +15,15 @@ public class User
     [JsonPropertyName("groups_obj")] public required List<UserGroup> GroupsObj { get; init; }
     [JsonPropertyName("email")] public string Email { get; set; } = string.Empty;
     [JsonPropertyName("avatar")] public required string Avatar { get; init; }
-    [JsonPropertyName("attributes")] public Dictionary<string, string> Attributes { get; set; } = new();
+
+    [JsonPropertyName("attributes")]
+    [JsonConverter(typeof(DynamicAttributesJsonConverter))]
+    public object Attributes { get; set; } = new();
+
     [JsonPropertyName("uid")] public required string Uid { get; init; }
     [JsonPropertyName("path")] public string Path { get; set; } = string.Empty;
+
     [JsonPropertyName("type")] public UserTypeEnum Type { get; set; }
+
     [JsonPropertyName("uuid")] public required Guid Uuid { get; init; }
 }
