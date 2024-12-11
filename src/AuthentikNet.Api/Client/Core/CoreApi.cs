@@ -11,6 +11,28 @@ public class CoreApi
         _client = client;
     }
 
+    /// <summary>
+    /// User Viewset
+    /// </summary>
+    /// <param name="attributes">Attributes</param>
+    /// <param name="email"></param>
+    /// <param name="groupsByName"></param>
+    /// <param name="groupsByPk"></param>
+    /// <param name="isActive"></param>
+    /// <param name="isSuperuser"></param>
+    /// <param name="name"></param>
+    /// <param name="ordering">Which field to use when ordering the results.</param>
+    /// <param name="page">A page number within the paginated result set.</param>
+    /// <param name="pageSize">Number of results to return per page.</param>
+    /// <param name="path"></param>
+    /// <param name="pathStartswith"></param>
+    /// <param name="search">A search term.</param>
+    /// <param name="type_"></param>
+    /// <param name="username"></param>
+    /// <param name="uuid"></param>
+    /// <param name="includeGroups"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<PaginatedUserList> CoreUsersList(
         string? attributes = null,
         string? email = null,
@@ -58,6 +80,18 @@ public class CoreApi
 
 
         return await _client.SendAsync<PaginatedUserList>(HttpMethod.Get, url,
+            cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// User Viewset
+    /// </summary>
+    /// <param name="id">A unique integer value identifying this User.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<User> CoreUsersRetrieve(string id, CancellationToken cancellationToken = default)
+    {
+        return await _client.SendAsync<User>(HttpMethod.Get, $"/core/users/{id}/",
             cancellationToken: cancellationToken);
     }
 }
