@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthentikNet.Api", "AuthentikNet.Api\AuthentikNet.Api.csproj", "{D0BDC4CF-C6DC-4DCC-A38A-589FA8FA9ACF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthentikNet.Api", "src\AuthentikNet.Api\AuthentikNet.Api.csproj", "{D0BDC4CF-C6DC-4DCC-A38A-589FA8FA9ACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
