@@ -89,7 +89,7 @@ public class CoreApi
     /// <param name="id">A unique integer value identifying this User.</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<User> CoreUsersRetrieve(string id, CancellationToken cancellationToken = default)
+    public async Task<User> CoreUsersRetrieve(int id, CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<User>(HttpMethod.Get, $"/core/users/{id}/",
             cancellationToken: cancellationToken);
