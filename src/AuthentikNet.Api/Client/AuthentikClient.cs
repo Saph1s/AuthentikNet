@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.Json;
 using AuthentikNet.Api.Client.Admin;
 using AuthentikNet.Api.Client.Core;
-using AuthentikNet.Api.Utils;
 
 namespace AuthentikNet.Api.Client;
 
@@ -69,7 +68,7 @@ public class AuthentikClient
     private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage response)
     {
         var content = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<T>(content, SourceGenerationContext.Default.Options) ??
+        return JsonSerializer.Deserialize<T>(content) ??
                throw new AuthentikException("Failed to deserialize response", 500);
     }
 
