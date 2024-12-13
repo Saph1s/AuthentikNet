@@ -1,5 +1,8 @@
 ﻿namespace AuthentikNet.Api.Client;
 
+/// <summary>
+/// Generic Authentik exception
+/// </summary>
 public class AuthentikException : Exception
 {
     public int StatusCode { get; }
@@ -10,6 +13,9 @@ public class AuthentikException : Exception
     }
 }
 
+/// <summary>
+/// "Bad request" exception
+/// </summary>
 public class AuthentikBadRequestException : AuthentikException
 {
     public AuthentikBadRequestException(string message) : base(message, 400)
@@ -17,6 +23,9 @@ public class AuthentikBadRequestException : AuthentikException
     }
 }
 
+/// <summary>
+/// "Unauthorized" exception
+/// </summary>
 public class AuthentikUnauthorizedException : AuthentikException
 {
     public AuthentikUnauthorizedException(string message) : base(message, 401)
@@ -24,6 +33,9 @@ public class AuthentikUnauthorizedException : AuthentikException
     }
 }
 
+/// <summary>
+/// "Forbidden" exception
+/// </summary>
 public class AuthentikForbiddenException : AuthentikException
 {
     public AuthentikForbiddenException(string message) : base(message, 403)
@@ -31,6 +43,9 @@ public class AuthentikForbiddenException : AuthentikException
     }
 }
 
+/// <summary>
+/// "Not found" exception
+/// </summary>
 public class AuthentikNotFoundException : AuthentikException
 {
     public AuthentikNotFoundException(string message) : base(message, 404)
