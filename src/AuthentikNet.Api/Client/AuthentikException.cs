@@ -30,3 +30,10 @@ public class AuthentikForbiddenException : AuthentikException
     {
     }
 }
+
+public class AuthentikNotFoundException : AuthentikException
+{
+    public AuthentikNotFoundException(string message) : base(message, 404)
+    {
+    }
+}

@@ -99,6 +99,7 @@ public class AuthentikClient
             HttpStatusCode.BadRequest => new AuthentikBadRequestException(errorMessage),
             HttpStatusCode.Unauthorized => new AuthentikUnauthorizedException(errorMessage),
             HttpStatusCode.Forbidden => new AuthentikForbiddenException(errorMessage),
+            HttpStatusCode.NotFound => new AuthentikNotFoundException(errorMessage),
             _ => new AuthentikException(errorMessage, (int)response.StatusCode)
         };
     }
