@@ -94,4 +94,17 @@ public class CoreApi
         return await _client.SendAsync<User>(HttpMethod.Get, $"/core/users/{id}/",
             cancellationToken: cancellationToken);
     }
+
+    /// <summary>
+    /// User Viewset
+    /// </summary>
+    /// <param name="id">A unique integer value identifying this User.</param>
+    /// <param name="data">UserRequest</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<User> CoreUsersPartialUpdate(int id, PatchedUserRequest data,
+        CancellationToken cancellationToken = default)
+    {
+        return await _client.SendAsync<User>(HttpMethod.Patch, $"/core/users/{id}/", data, cancellationToken);
+    }
 }
