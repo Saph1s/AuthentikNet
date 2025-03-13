@@ -12,7 +12,7 @@ public class CoreApi
     }
 
     /// <summary>
-    /// User Viewset
+    /// Retrieve all users
     /// </summary>
     /// <param name="attributes">Attributes</param>
     /// <param name="email"></param>
@@ -84,7 +84,18 @@ public class CoreApi
     }
 
     /// <summary>
-    /// User Viewset
+    /// Create user
+    /// </summary>
+    /// <param name="data">UserRequest</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<User> CoreUsersCreate(UserRequest data, CancellationToken cancellationToken = default)
+    {
+        return await _client.SendAsync<User>(HttpMethod.Post, "/core/users/", data, cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieve user
     /// </summary>
     /// <param name="id">A unique integer value identifying this User.</param>
     /// <param name="cancellationToken"></param>
@@ -96,7 +107,7 @@ public class CoreApi
     }
 
     /// <summary>
-    /// User Viewset
+    /// Partial update user
     /// </summary>
     /// <param name="id">A unique integer value identifying this User.</param>
     /// <param name="data">UserRequest</param>
