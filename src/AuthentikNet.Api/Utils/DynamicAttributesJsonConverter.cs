@@ -67,6 +67,7 @@ public class DynamicAttributesJsonConverter : JsonConverter<object>
         return list;
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, value, options);

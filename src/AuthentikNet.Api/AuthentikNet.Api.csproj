@@ -4,20 +4,34 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Version>0.0.3</Version>
+
+        <Version>0.0.4</Version>
+
         <Authors>Saph1s</Authors>
-        <Description>Authentik api client</Description>
-        <Copyright>Copyright (c) Saph1s 2024</Copyright>
-        <PackageProjectUrl>https://github.com/Saph1s/AuthentikNet</PackageProjectUrl>
         <Company>Saph1s</Company>
+        <Description>Authentik API client</Description>
+        <Copyright>Copyright 2024-2025 Anton "Saph1s" Babenko</Copyright>
+
+        <PackageProjectUrl>https://github.com/Saph1s/AuthentikNet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Saph1s/AuthentikNet</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryUrl>https://github.com/Saph1s/AuthentikNet</RepositoryUrl>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageTags>authentik;sso;identity</PackageTags>
+        <PackageReleaseNotes>Authentik compatible version - 2025.2.4</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="README.md" Pack="true" PackagePath=""/>
+        <None Include="LICENSE" Pack="true" PackagePath=""/>
+        <None Include="NOTICE" Pack="true" PackagePath=""/>
     </ItemGroup>
 
 </Project>
