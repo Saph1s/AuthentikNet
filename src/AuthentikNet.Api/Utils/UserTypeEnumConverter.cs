@@ -4,8 +4,12 @@ using AuthentikNet.Api.Models;
 
 namespace AuthentikNet.Api.Utils;
 
+/// <summary>
+/// Converter for <see cref="UserTypeEnum"/>.
+/// </summary>
 public class UserTypeEnumConverter : JsonConverter<UserTypeEnum>
 {
+    /// <inheritdoc />
     public override UserTypeEnum Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var value = reader.GetString();
@@ -19,6 +23,7 @@ public class UserTypeEnumConverter : JsonConverter<UserTypeEnum>
         };
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, UserTypeEnum value, JsonSerializerOptions options)
     {
         var stringValue = value switch

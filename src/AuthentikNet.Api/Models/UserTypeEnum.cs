@@ -5,7 +5,7 @@ using AuthentikNet.Api.Utils;
 namespace AuthentikNet.Api.Models;
 
 /// <summary>
-/// The type of account
+/// User account type
 /// </summary>
 [JsonConverter(typeof(UserTypeEnumConverter))]
 public enum UserTypeEnum

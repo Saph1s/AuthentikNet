@@ -3,8 +3,12 @@ using System.Text.Json.Serialization;
 
 namespace AuthentikNet.Api.Utils;
 
+/// <summary>
+/// Custom JSON converter for handling dynamic attributes.
+/// </summary>
 public class DynamicAttributesJsonConverter : JsonConverter<object>
 {
+    /// <inheritdoc />
     public override object? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return ParseValue(ref reader, options);
