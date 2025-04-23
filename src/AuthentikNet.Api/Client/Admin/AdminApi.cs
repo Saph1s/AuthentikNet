@@ -12,34 +12,66 @@ public class AdminApi
         _client = client;
     }
 
+    /// <summary>
+    /// Read-only view list all installed apps
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<List<App>> AdminAppsList(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<List<App>>(HttpMethod.Get, "/admin/apps/", cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Login Metrics per 1h
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<LoginMetrics> AdminMetricsRetrieve(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<LoginMetrics>(HttpMethod.Get, "/admin/metrics/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Read-only view list all installed models
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<List<App>> AdminModelsList(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<List<App>>(HttpMethod.Get, "/admin/models/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Get settings
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Settings> AdminSettingsRetrieve(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Settings>(HttpMethod.Get, "/admin/settings/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Update settings
+    /// </summary>
+    /// <param name="data">Settings model</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Settings> AdminSettingsUpdate(Settings data, CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Settings>(HttpMethod.Put, "/admin/settings/", data, cancellationToken);
     }
 
+    /// <summary>
+    /// Partial update settings
+    /// </summary>
+    /// <param name="data">PartialSettings moder</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Settings> AdminSettingsPartialUpdate(Settings data, CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Settings>(HttpMethod.Patch, "/admin/settings/", data, cancellationToken);
