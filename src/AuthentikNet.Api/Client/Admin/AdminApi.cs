@@ -72,7 +72,7 @@ public class AdminApi
     /// <param name="data">PartialSettings moder</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Settings> AdminSettingsPartialUpdate(Settings data, CancellationToken cancellationToken = default)
+    public async Task<Settings> AdminSettingsPartialUpdate(PatchedSettingsRequest data, CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Settings>(HttpMethod.Patch, "/admin/settings/", data, cancellationToken);
     }
