@@ -15,15 +15,13 @@ public class AuthentikClient
     public AdminApi Admin { get; }
     public CoreApi Core { get; }
 
-    public AuthentikClient(AuthentikClientOptions options)
+    public AuthentikClient(HttpClient client, AuthentikClientOptions options)
     {
+        _client = client ?? throw new ArgumentNullException(nameof(client));
         _options = options ?? throw new ArgumentNullException(nameof(options));
 
-        _client = new HttpClient
-        {
-            BaseAddress = new Uri(options.BaseUrl),
-            Timeout = options.Timeout
-        };
+        _client.BaseAddress = new Uri(options.BaseUrl);
+        _client.Timeout = options.Timeout;
 
         _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.Token);
         _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -32,6 +30,10 @@ public class AuthentikClient
 
         Admin = new AdminApi(this);
         Core = new CoreApi(this);
+    }
+
+    public AuthentikClient(AuthentikClientOptions options) : this(new HttpClient(), options)
+    {
     }
 
     public async Task<T> SendAsync<T>(HttpMethod method, string path, object? data = null,
