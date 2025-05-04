@@ -55,7 +55,7 @@ jobs:
       - name: Pack
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} --version-suffix "-${{ steps.short_sha.outputs.SHA }}"
+            dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}-${{ steps.short_sha.outputs.SHA }}"
           else
             dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
           fi
