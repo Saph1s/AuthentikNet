@@ -48,17 +48,15 @@ jobs:
         run: echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Build
-        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
-      
-      #      - name: Pack
-      #        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
-      - name: Pack
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}-${{ steps.short_sha.outputs.SHA }}"
+              dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}-${{ steps.short_sha.outputs.SHA }}"
           else
-            dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+              dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
           fi
+      
+      - name: Pack
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
