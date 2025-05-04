@@ -54,7 +54,7 @@ jobs:
       #        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
       - name: Pack
         run: |
-          if [[ "${{ github.ref }}" == refs/heads/dev ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
             dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} --version-suffix "-${{ steps.short_sha.outputs.SHA }}"
           else
             dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
@@ -85,7 +85,7 @@ jobs:
 
       - name: Publish to NuGet
         run: |
-          dotnet nuget push "${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg" \
-            --api-key ${{ secrets.NUGET_API_KEY }} \
-            --source ${{ env.NUGET_SOURCE_URL }} \
-            --skip-duplicate
+          for f in ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg; do
+            echo "Publishing $f to NuGet..."
+            dotnet nuget push "$f" --source ${{ env.NUGET_SOURCE_URL }} --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+          done
