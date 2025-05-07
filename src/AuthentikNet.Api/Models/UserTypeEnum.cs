@@ -7,7 +7,7 @@ namespace AuthentikNet.Api.Models;
 /// <summary>
 /// User account type
 /// </summary>
-[JsonConverter(typeof(UserTypeEnumConverter))]
+[JsonConverter(typeof(JsonStringEnumMemberConverter<UserTypeEnum>))]
 public enum UserTypeEnum
 {
     /// <summary>

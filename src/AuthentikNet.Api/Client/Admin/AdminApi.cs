@@ -72,29 +72,54 @@ public class AdminApi
     /// <param name="data">PartialSettings moder</param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async Task<Settings> AdminSettingsPartialUpdate(PatchedSettingsRequest data, CancellationToken cancellationToken = default)
+    public async Task<Settings> AdminSettingsPartialUpdate(PatchedSettingsRequest data,
+        CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Settings>(HttpMethod.Patch, "/admin/settings/", data, cancellationToken);
     }
 
+    /// <summary>
+    /// Get system information
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<SystemInfo> AdminSystemRetrieve(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<SystemInfo>(HttpMethod.Get, "/admin/system/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Get system information
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<SystemInfo> AdminSystemCreate(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<SystemInfo>(HttpMethod.Post, "/admin/system/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Get running and latest version
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Version> AdminVersionRetrieve(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Version>(HttpMethod.Get, "/admin/version/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// VersionHistory Viewset
+    /// </summary>
+    /// <param name="build"></param>
+    /// <param name="ordering">Which field to use when ordering the results.</param>
+    /// <param name="search">A search term.</param>
+    /// <param name="version"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<List<VersionHistory>> AdminVersionHistoryList(
         string? build = null,
         string? ordering = null,
@@ -109,23 +134,37 @@ public class AdminApi
                 { "ordering", ordering },
                 { "search", search },
                 { "version", version }
-            }.Where(kv => kv.Value != null)
-            .ToDictionary(kv => kv.Key, kv => kv.Value);
+            }
+            .Where(kv => kv.Value != null)
+            .ToDictionary(kv => kv.Key, kv => kv.Value!);
 
         if (queryParameters.Count > 0)
         {
-            url += "?" + string.Join("&", queryParameters.Select(x => $"{x.Key}={x.Value}"));
+            var query = string.Join("&", queryParameters
+                .Select(x => $"{x.Key}={Uri.EscapeDataString(x.Value)}"));
+            url += "?" + query;
         }
 
         return await _client.SendAsync<List<VersionHistory>>(HttpMethod.Get, url, cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// VersionHistory Viewset
+    /// </summary>
+    /// <param name="id">A unique integer value identifying this Version history.</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<VersionHistory> AdminVersionHistoryRetrieve(int id, CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<VersionHistory>(HttpMethod.Get, $"/admin/version/history/{id}/",
             cancellationToken: cancellationToken);
     }
 
+    /// <summary>
+    /// Get currently connected worker count.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<Workers> AdminWorkersRetrieve(CancellationToken cancellationToken = default)
     {
         return await _client.SendAsync<Workers>(HttpMethod.Get, "/admin/workers/",

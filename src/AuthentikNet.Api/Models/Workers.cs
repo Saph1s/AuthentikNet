@@ -4,5 +4,7 @@ namespace AuthentikNet.Api.Models;
 
 public class Workers
 {
-    [JsonPropertyName("id")] public required int Id { get; set; }
+    [JsonPropertyName("worker_id")] public required int WorkerId { get; set; }
+    [JsonPropertyName("version")] public required string Version { get; set; }
+    [JsonPropertyName("version_matching")] public required bool VersionMatching { get; set; }
 }
