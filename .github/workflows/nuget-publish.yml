@@ -41,15 +41,16 @@ jobs:
         run: |
           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ${{ env.PROJECT_PATH }})
           PACKAGE_ID=$(grep -oPm1 "(?<=<PackageId>)[^<]+" ${{ env.PROJECT_PATH }} || basename ${{ env.PROJECT_PATH }} .csproj)
-          VERSIONS=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json" | jq -r '.versions[]' | grep "^${VERSION}-dev\." || true)
+          ALL_VERSIONS=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json" | jq -r '.versions[]' || true)
+          MAX_VERSION=$(echo "$ALL_VERSIONS" | sort -V | tail -n1)
           if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
             FINAL_VERSION="$VERSION"
           elif [[ "${GITHUB_REF}" == "refs/heads/dev" ]]; then
-            VERSIONS=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json" | jq -r '.versions[]' | grep "^${VERSION}-dev\." || true)
-            if [[ -z "$VERSIONS" ]]; then
+            DEV_VERSIONS=$(echo "$ALL_VERSIONS" | grep "^${VERSION}-dev\." || true)
+            if [[ -z "$DEV_VERSIONS" ]]; then
               N=0
             else
-              N=$(echo "$VERSIONS" | sed -E "s/^${VERSION}-dev\.([0-9]+)$/\1/" | sort -nr | head -n1)
+              N=$(echo "$DEV_VERSIONS" | sed -E "s/^${VERSION}-dev\.([0-9]+)$/\1/" | sort -nr | head -n1)
               N=$((N+1))
             fi
             FINAL_VERSION="${VERSION}-dev.${N}"
@@ -57,6 +58,14 @@ jobs:
             SHORT_SHA=$(git rev-parse --short HEAD)
             FINAL_VERSION="${VERSION}-${SHORT_SHA}"
           fi
+          
+          if [[ -n "$MAX_VERSION" ]]; then
+            if [[ "$(printf '%s\n' "$MAX_VERSION" "$FINAL_VERSION" | sort -V | tail -n1)" != "$FINAL_VERSION" ]]; then
+              echo "Error: The version $FINAL_VERSION is not greater than the latest version $MAX_VERSION."
+              exit 1
+            fi
+          fi
+          
           echo "PROJECT_VERSION=$FINAL_VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $FINAL_VERSION"
 
