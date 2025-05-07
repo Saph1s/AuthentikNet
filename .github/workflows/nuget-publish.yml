@@ -40,23 +40,35 @@ jobs:
         shell: bash
         run: |
           VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ${{ env.PROJECT_PATH }})
-          echo "PROJECT_VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "Extracted version: $VERSION"
+          PACKAGE_ID=$(grep -oPm1 "(?<=<PackageId>)[^<]+" ${{ env.PROJECT_PATH }} || basename ${{ env.PROJECT_PATH }} .csproj)
+          VERSIONS=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json" | jq -r '.versions[]' | grep "^${VERSION}-dev\." || true)
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            FINAL_VERSION="$VERSION"
+          elif [[ "${GITHUB_REF}" == "refs/heads/dev" ]]; then
+            VERSIONS=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json" | jq -r '.versions[]' | grep "^${VERSION}-dev\." || true)
+            if [[ -z "$VERSIONS" ]]; then
+              N=0
+            else
+              N=$(echo "$VERSIONS" | sed -E "s/^${VERSION}-dev\.([0-9]+)$/\1/" | sort -nr | head -n1)
+              N=$((N+1))
+            fi
+            FINAL_VERSION="${VERSION}-dev.${N}"
+          else
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            FINAL_VERSION="${VERSION}-${SHORT_SHA}"
+          fi
+          echo "PROJECT_VERSION=$FINAL_VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $FINAL_VERSION"
 
       - name: Get short SHA
         id: short_sha
         run: echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Build
-        run: |
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-              dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}-${{ steps.short_sha.outputs.SHA }}"
-          else
-              dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
-          fi
-      
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}"
+
       - name: Pack
-        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -67,7 +79,7 @@ jobs:
   publish-nuget:
     name: Publish NuGet package
     needs: build-nuget
-    if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
