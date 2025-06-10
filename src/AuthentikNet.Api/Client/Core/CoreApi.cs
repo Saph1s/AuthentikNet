@@ -118,4 +118,55 @@ public class CoreApi
     {
         return await _client.SendAsync<User>(HttpMethod.Patch, $"/core/users/{id}/", data, cancellationToken);
     }
+
+    /// <summary>
+    /// Group Viewset
+    /// </summary>
+    /// <param name="membersByPk"></param>
+    /// <param name="attributes">Attributes</param>
+    /// <param name="isSuperuser"></param>
+    /// <param name="membersByName">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</param>
+    /// <param name="name"></param>
+    /// <param name="ordering">Which field to use when ordering the results.</param>
+    /// <param name="page">A page number within the paginated result set.</param>
+    /// <param name="pageSize">Number of results to return per page.</param>
+    /// <param name="search">A search term.</param>
+    /// <param name="membersByUsername"></param>
+    /// <param name="includeUsers"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<PaginatedGroupList> CoreGroupsList(
+        int[] membersByPk,
+        string? attributes = null,
+        bool? isSuperuser = null,
+        string[]? membersByName = null,
+        string? name = null,
+        string? ordering = null,
+        int? page = null,
+        int? pageSize = null,
+        string? search = null,
+        string[]? membersByUsername = null,
+        bool includeUsers = true, CancellationToken cancellationToken = default)
+    {
+        var url = "/core/groups/";
+        var queryDict = new Dictionary<string, object?>
+            {
+                { "attributes", attributes },
+                { "is_superuser", isSuperuser },
+                { "members_by_pk", membersByPk },
+                { "members_by_name", membersByName },
+                { "name", name },
+                { "ordering", ordering },
+                { "page", page },
+                { "page_size", pageSize },
+                { "search", search },
+                { "members_by_username", membersByUsername },
+                { "include_users", includeUsers }
+            }.Where(kv => kv.Value != null)
+            .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+        url += "?" + string.Join("&", queryDict.Select(x => $"{x.Key}={x.Value}"));
+
+        return await _client.SendAsync<PaginatedGroupList>(HttpMethod.Get, url, cancellationToken: cancellationToken);
+    }
 }
