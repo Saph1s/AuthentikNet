@@ -120,7 +120,7 @@ public class CoreApi
     }
 
     /// <summary>
-    /// Group Viewset
+    /// Retrieve all groups
     /// </summary>
     /// <param name="membersByPk"></param>
     /// <param name="attributes">Attributes</param>
@@ -169,5 +169,22 @@ public class CoreApi
         url += "?" + string.Join("&", queryDict.Select(x => $"{x.Key}={x.Value}"));
 
         return await _client.SendAsync<PaginatedGroupList>(HttpMethod.Get, url, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieve group
+    /// </summary>
+    /// <param name="id">A UUID string identifying this Group.</param>
+    /// <param name="includeUsers"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<Group> CoreGroupsRetrieve(
+        Guid id,
+        bool includeUsers = true,
+        CancellationToken cancellationToken = default)
+    {
+        var url = $"/core/groups/{id}/?include_users={includeUsers}";
+
+        return await _client.SendAsync<Group>(HttpMethod.Get, url, cancellationToken: cancellationToken);
     }
 }
