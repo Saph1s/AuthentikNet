@@ -136,7 +136,7 @@ public class CoreApi
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     public async Task<PaginatedGroupList> CoreGroupsList(
-        int[] membersByPk,
+        int[]? membersByPk = null,
         string? attributes = null,
         bool? isSuperuser = null,
         string[]? membersByName = null,
@@ -146,7 +146,8 @@ public class CoreApi
         int? pageSize = null,
         string? search = null,
         string[]? membersByUsername = null,
-        bool includeUsers = true, CancellationToken cancellationToken = default)
+        bool includeUsers = true,
+        CancellationToken cancellationToken = default)
     {
         var url = "/core/groups/";
         var queryDict = new Dictionary<string, object?>
