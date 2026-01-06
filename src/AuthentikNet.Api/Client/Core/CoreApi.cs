@@ -1,4 +1,5 @@
 ﻿using AuthentikNet.Api.Models;
+using AuthentikNet.Api.Utils;
 
 namespace AuthentikNet.Api.Client.Core;
 
@@ -53,8 +54,7 @@ public class CoreApi
         bool includeGroups = true, CancellationToken cancellationToken = default)
 
     {
-        var url = "/core/users/";
-        var queryDict = new Dictionary<string, object?>
+        var parameters = new Dictionary<string, object?>
             {
                 { "attributes", attributes },
                 { "email", email },
@@ -76,8 +76,7 @@ public class CoreApi
             }.Where(kv => kv.Value != null)
             .ToDictionary(kv => kv.Key, kv => kv.Value);
 
-        url += "?" + string.Join("&", queryDict.Select(x => $"{x.Key}={x.Value}"));
-
+        var url = QueryStringBuilder.BuildQueryString("/core/users/", parameters);
 
         return await _client.SendAsync<PaginatedUserList>(HttpMethod.Get, url,
             cancellationToken: cancellationToken);
@@ -149,8 +148,8 @@ public class CoreApi
         bool includeUsers = true,
         CancellationToken cancellationToken = default)
     {
-        var url = "/core/groups/";
-        var queryDict = new Dictionary<string, object?>
+        // var url = "/core/groups/";
+        var parameters = new Dictionary<string, object?>
             {
                 { "attributes", attributes },
                 { "is_superuser", isSuperuser },
@@ -165,8 +164,8 @@ public class CoreApi
                 { "include_users", includeUsers }
             }.Where(kv => kv.Value != null)
             .ToDictionary(kv => kv.Key, kv => kv.Value);
-
-        url += "?" + string.Join("&", queryDict.Select(x => $"{x.Key}={x.Value}"));
+        
+        var url = QueryStringBuilder.BuildQueryString("/core/groups/", parameters);
 
         return await _client.SendAsync<PaginatedGroupList>(HttpMethod.Get, url, cancellationToken: cancellationToken);
     }
