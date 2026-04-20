@@ -1,0 +1,110 @@
+name: NuGet | Build and Publish
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - dev
+    tags: [ "[0-9]+.[0-9]+.[0-9]+" ]
+  release:
+    types:
+      - published
+
+
+env:
+  PROJECT_PATH: ./src/AuthentikNet.Api/AuthentikNet.Api.csproj
+  PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}/output
+  NUGET_SOURCE_URL: "https://api.nuget.org/v3/index.json"
+
+jobs:
+  build-nuget:
+    name: Build NuGet package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      - name: Extract version from project file
+        id: extract_version
+        shell: bash
+        run: |
+          VERSION=$(grep -oPm1 "(?<=<Version>)[^<]+" ${{ env.PROJECT_PATH }})
+          PACKAGE_ID=$(grep -oPm1 "(?<=<PackageId>)[^<]+" ${{ env.PROJECT_PATH }} || basename ${{ env.PROJECT_PATH }} .csproj)
+          ALL_VERSIONS=$(curl -s "https://api.nuget.org/v3-flatcontainer/${PACKAGE_ID,,}/index.json" | jq -r '.versions[]' || true)
+          MAX_VERSION=$(echo "$ALL_VERSIONS" | sort -V | tail -n1)
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            FINAL_VERSION="$VERSION"
+          elif [[ "${GITHUB_REF}" == "refs/heads/dev" ]]; then
+            DEV_VERSIONS=$(echo "$ALL_VERSIONS" | grep "^${VERSION}-dev\." || true)
+            if [[ -z "$DEV_VERSIONS" ]]; then
+              N=0
+            else
+              N=$(echo "$DEV_VERSIONS" | sed -E "s/^${VERSION}-dev\.([0-9]+)$/\1/" | sort -nr | head -n1)
+              N=$((N+1))
+            fi
+            FINAL_VERSION="${VERSION}-dev.${N}"
+          else
+            SHORT_SHA=$(git rev-parse --short HEAD)
+            FINAL_VERSION="${VERSION}-${SHORT_SHA}"
+          fi
+          
+          if [[ -n "$MAX_VERSION" ]]; then
+            if [[ "$(printf '%s\n' "$MAX_VERSION" "$FINAL_VERSION" | sort -V | tail -n1)" != "$FINAL_VERSION" ]]; then
+              echo "Error: The version $FINAL_VERSION is not greater than the latest version $MAX_VERSION."
+              exit 1
+            fi
+          fi
+          
+          echo "PROJECT_VERSION=$FINAL_VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $FINAL_VERSION"
+
+      - name: Get short SHA
+        id: short_sha
+        run: echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}"
+
+      - name: Pack
+        run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --no-build --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }} /p:Version="${{ steps.extract_version.outputs.PROJECT_VERSION }}"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg
+  
+  publish-nuget:
+    name: Publish NuGet package
+    needs: build-nuget
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nuget-package
+          path: ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Publish to NuGet
+        run: |
+          for f in ${{ env.PACKAGE_OUTPUT_DIRECTORY }}/*.nupkg; do
+            echo "Publishing $f to NuGet..."
+            dotnet nuget push "$f" --source ${{ env.NUGET_SOURCE_URL }} --api-key ${{ secrets.NUGET_API_KEY }} --skip-duplicate
+          done

@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <Version>2026.2</Version>
+
+        <Authors>Saph1s</Authors>
+        <Company>Saph1s</Company>
+        <Description>Authentik API client</Description>
+        <Copyright>Copyright 2024-2025 Anton "Saph1s" Babenko</Copyright>
+
+        <PackageProjectUrl>https://github.com/Saph1s/AuthentikNet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Saph1s/AuthentikNet</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageTags>authentik;sso;identity</PackageTags>
+        <PackageReleaseNotes>Authentik compatible version - 2025.4.2</PackageReleaseNotes>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath=""/>
+        <None Include="LICENSE" Pack="true" PackagePath=""/>
+        <None Include="NOTICE" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+</Project>
