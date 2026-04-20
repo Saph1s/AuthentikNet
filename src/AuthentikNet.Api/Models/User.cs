@@ -12,7 +12,7 @@ public class User
     [JsonPropertyName("last_login")] public DateTime? LastLogin { get; set; }
     [JsonPropertyName("is_superuser")] public required bool IsSuperUser { get; init; }
     [JsonPropertyName("groups")] public List<Guid> Groups { get; set; } = [];
-    [JsonPropertyName("groups_obj")] public required List<UserGroup> GroupsObj { get; init; }
+    [JsonPropertyName("groups_obj")] public required List<PartialGroup> GroupsObj { get; init; }
     [JsonPropertyName("email")] public string Email { get; set; } = string.Empty;
     [JsonPropertyName("avatar")] public required string Avatar { get; init; }
 
